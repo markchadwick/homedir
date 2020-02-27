@@ -1,0 +1,39 @@
+#!/bin/bash -eux
+
+I3_CONFIG_HOME=~/.config/i3
+
+# Copies the system's default i3 config to this installation's default. This
+# will overwrite any previous config
+function setup() {
+  # cp /etc/i3/config "${I3_CONFIG_HOME}/config"
+  rm "${I3_CONFIG_HOME}/config"
+}
+
+# Iterate through each readable file in $I3_CONFIG_HOME/config.d, and if the
+# file is readable, append it to the configuration
+function generate() {
+  for file in "${I3_CONFIG_HOME}/config.d"/*
+  do
+    if [ -f "$file" -a -r "$file" ]
+    then
+      echo >> "${I3_CONFIG_HOME}/config"
+      echo "##########################################" >> "${I3_CONFIG_HOME}/config"
+      echo "# $file" >> "${I3_CONFIG_HOME}/config"
+      echo >> "${I3_CONFIG_HOME}/config"
+
+      cat "$file" >> "${I3_CONFIG_HOME}/config"
+    fi
+  done
+}
+
+# Reload and restart i3 in place
+function reload() {
+  i3-msg reload
+  i3-msg restart
+}
+
+
+# Do the damn thing
+setup
+generate
+reload

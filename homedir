@@ -1,0 +1,59 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SRCDIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DSTDIR=$HOME
+
+# Links a file in the SRCDIR to the DSTDIR through a number of different
+# strategies.
+function link_file {
+  file="$1"
+  src="${SRCDIR}/${file}"
+  dst="${DSTDIR}/${file}"
+  dstdir=$(dirname $dst)
+
+  # If the destination directory doesn't exist, create it with the default
+  # permissions.  This won't work for things like ~/.ssh, but, you know, we're
+  # all adults here and I think we can deal with it. This script won't touch a
+  # directory once it exists so just change the permissions and get on with your
+  # life
+  if [[ ! -d "${dstdir}" ]]; then
+    mkdir -p "${dstdir}"
+  fi
+
+  # if the destination simply doesn't exist, link that thing. We're done.
+  if [[ ! -e "${dst}" ]]; then
+    ln -s "$src" "$dst"
+    return
+  fi
+
+  # In the most common case, the file is already symlinked to the configuration.
+  # Check for this and bail
+  if [[ -L "${dst}" ]]; then
+    linksrc=$(readlink $dst)
+    if [[ "$linksrc" == "$src" ]]; then
+      return
+    fi
+  fi
+
+  # All other cases are unexpected. Just print something out to the console give
+  # up
+  echo "I'm not entirely sure what to do with ${file}. Giving up"
+  exit 1
+}
+
+function link_all {
+  for file in $(find $SRCDIR -type f); do
+    name=${file#"${SRCDIR}/"}
+
+    # TODO: I can't quite figure out an ignore format at the moment. Just blow
+    # past anything that has 'homedir' in it
+    if [[ $name != *"homedir"* ]]; then
+      link_file "${name}"
+    fi
+  done
+
+}
+
+link_all
