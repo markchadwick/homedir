@@ -1,5 +1,7 @@
 # Volume controls
-bindsym XF86AudioRaiseVolume exec amixer set Master 3+ unmute
-bindsym XF86AudioLowerVolume exec amixer set Master 3-
+# bindsym XF86AudioRaiseVolume exec amixer -c3 set PCM 3+ unmute
+# bindsym XF86AudioLowerVolume exec amixer -c3 set PCM 3-
+bindsym XF86AudioRaiseVolume exec amixer set PCM 3+ unmute
+bindsym XF86AudioLowerVolume exec amixer set PCM 3-
 # bindsym XF86AudioMute        exec amixer set Master toggle
 bindsym XF86AudioPlay        exec playerctl play-pause

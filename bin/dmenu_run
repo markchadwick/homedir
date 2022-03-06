@@ -1,0 +1,5 @@
+#!/bin/sh
+unset GTK_IM_MODULE
+unset QT_IM_MODULE
+unset XMODIFIERS
+dmenu_path | dmenu "$@"

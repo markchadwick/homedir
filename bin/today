@@ -1,0 +1,7 @@
+#!/bin/bash
+root=~/Documents/notes
+today=$root/`date +'%Y/%m/%d'`
+
+mkdir -p $today
+# cd $today
+echo $today

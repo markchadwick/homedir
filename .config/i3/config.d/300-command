@@ -2,7 +2,7 @@
 bindsym Mod1+Return exec i3-sensible-terminal
 
 # start dmenu (a program launcher)
-bindsym Mod1+$dmenu_launch exec dmenu_run
+bindsym Mod1+$dmenu_launch exec /home/mchadwick/bin/dmenu_run
 
 # ---------------------------------------------------------------------------
 # TODO: Disabled reload, re-bound restart
